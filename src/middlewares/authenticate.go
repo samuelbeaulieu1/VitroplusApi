@@ -3,10 +3,10 @@ package middlewares
 import (
 	"strings"
 
-	"github.com/samuelbeaulieu1/vitroplus-api/engine"
+	"github.com/samuelbeaulieu1/gimlet"
 )
 
-func AuthenticateUser(route *engine.Route, ctx *engine.Context) {
+func AuthenticateAdmin(route *gimlet.Route, ctx *gimlet.Context) {
 	authorization := ctx.Request.Header.Get("Authorization")
 	splitToken := strings.Split(authorization, "Bearer ")
 	if len(splitToken) != 2 {
