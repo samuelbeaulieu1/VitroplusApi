@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/samuelbeaulieu1/gimlet"
+	"github.com/samuelbeaulieu1/gimlet/actions"
 	"github.com/samuelbeaulieu1/gimlet/validators"
 	"github.com/samuelbeaulieu1/vitroplus-api/src/entities"
 	"github.com/samuelbeaulieu1/vitroplus-api/src/models"
@@ -25,6 +26,6 @@ func (service *BranchService) GetEntity() gimlet.Entity[models.BranchModel] {
 	return entities.NewBranch()
 }
 
-func (service *BranchService) RegisterValidators(validator *validators.Validator) {
+func (service *BranchService) RegisterValidators(action actions.Action, request *models.BranchModel, validator *validators.Validator) {
 	validator.RegisterValidation("isValidPhone", validation.IsValidPhone)
 }

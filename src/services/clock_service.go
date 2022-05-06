@@ -16,7 +16,7 @@ const (
 	workTimeQuarter      = 15
 	workTimeThreshold    = 7.5
 	overtimeHrsThreshold = 40
-	startOfDay           = 8
+	startOfDay           = 12
 )
 
 type ClockService struct{}
@@ -155,7 +155,7 @@ func (service *ClockService) UpdateEmployeeClocks(req *classes.UpdateEmployeeClo
 
 	clockEntity := entities.NewClock()
 	if len(req.Clocks) > 0 {
-		err = clockEntity.UpdateEmployeeClocks(req.EmployeeID, &req.Clocks)
+		err = clockEntity.UpdateEmployeeClocks(req, &req.Clocks)
 		if err != nil {
 			return responses.NewError("Impossible de sauvegarder les entrées pour l'employé")
 		}
@@ -196,7 +196,7 @@ func (service *ClockService) getAndVerifyClockInEmployee(pin string) (*models.Em
 	if err != nil {
 		return nil, err
 	}
-	if employee.IsConstantHours {
+	if *employee.IsConstantHours {
 		return nil, responses.NewError(fmt.Sprintf("%s %s est à temps constant", employee.Firstname, employee.Lastname))
 	}
 
@@ -217,7 +217,14 @@ func (service *ClockService) verifyEmployeeClockIn(employee *models.EmployeeMode
 func (service *ClockService) verifyEmployeeLastDay(employee *models.EmployeeModel, date time.Time) responses.Error {
 	if lastClock, err := entities.NewClock().GetLastEmployeeClock(employee.ID); err == nil {
 		lastDayClocks, err := service.GetEmployeeClocks(employee.ID, lastClock.Date)
-		if err != nil || len(lastDayClocks.Clocks)%2 != 0 {
+		validClocks := false
+		if err == nil {
+			year1, month1, day1 := date.Date()
+			year2, month2, day2 := lastDayClocks.Date.Date()
+			validClocks = (year1 == year2 && month1 == month2 && day1 == day2) || len(lastDayClocks.Clocks)%2 == 0
+		}
+
+		if !validClocks {
 			message := fmt.Sprintf("%s %s n'a pas complété sa dernière journée de travail. Veuillez contacter un administrateur pour la compléter manuellement", employee.Firstname, employee.Lastname)
 			return responses.NewError(message)
 		}

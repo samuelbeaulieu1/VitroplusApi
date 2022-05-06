@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/samuelbeaulieu1/gimlet"
 	"github.com/samuelbeaulieu1/gimlet/lang"
 	"github.com/samuelbeaulieu1/gimlet/middlewares"
@@ -17,6 +19,7 @@ func main() {
 	registerControllers(instance)
 	dao.InitConnection()
 	lang.Set(lang.FR)
+	os.Setenv("TZ", "UTC")
 	instance.Run()
 }
 

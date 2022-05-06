@@ -6,7 +6,7 @@ require (
 	github.com/fatih/structs v1.1.0
 	github.com/golang-jwt/jwt/v4 v4.4.1
 	github.com/gorilla/schema v1.2.0
-	github.com/samuelbeaulieu1/gimlet v1.2.1
+	github.com/samuelbeaulieu1/gimlet v1.2.2
 	gorm.io/driver/mysql v1.2.3
 	gorm.io/gorm v1.22.5
 )

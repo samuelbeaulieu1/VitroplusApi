@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/samuelbeaulieu1/gimlet"
+	"github.com/samuelbeaulieu1/vitroplus-api/src/classes"
 	"github.com/samuelbeaulieu1/vitroplus-api/src/dao"
 	"github.com/samuelbeaulieu1/vitroplus-api/src/models"
 )
@@ -42,14 +43,15 @@ func (clock *Clock) Exists(id string) bool {
 	return clock.dao.ExistsByID(id, &models.ClockModel{})
 }
 
-func (clock *Clock) UpdateEmployeeClocks(employeeID string, clocks *[]models.ClockModel) error {
+func (clock *Clock) UpdateEmployeeClocks(req *classes.UpdateEmployeeClocksRequest, clocks *[]models.ClockModel) error {
 	newClocks := []models.ClockModel{}
+	year, month, day := req.Date.Date()
 	for _, c := range *clocks {
-		date := c.Date.In(time.UTC)
+		date := time.Date(year, month, day, c.Date.Hour(), c.Date.Minute(), 0, 0, time.UTC)
 		newClocks = append(newClocks, models.ClockModel{
 			ID:         gimlet.CreateNewID(clock.dao, &models.ClockModel{}, gimlet.DefaultIDLength),
 			Date:       date,
-			EmployeeID: employeeID,
+			EmployeeID: req.EmployeeID,
 		})
 	}
 
