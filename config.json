@@ -1,7 +1,7 @@
 {
     "Port": "8000",
     "MaxPostFormSizeMB": 256,
-	"AllowOrigin": ["(http:\\/\\/localhost)"],
+	"AllowOrigin": ["*"],
 	"AllowMethods": ["POST", "DELETE", "PUT", "GET", "OPTIONS"],
 	"AllowCredentials": true,
 	"AllowHeaders": ["Origin", "Authorization", "Content-Type", "X-Auth-Token"]

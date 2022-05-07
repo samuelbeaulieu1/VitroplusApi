@@ -25,6 +25,7 @@ func main() {
 
 func registerControllers(instance *gimlet.Engine) {
 	instance.Group("/v1", func(r gimlet.Router) {
+		controllers.NewAdminController().RegisterRoutes(r)
 		controllers.NewClockController().RegisterRoutes(r)
 		controllers.NewBranchController().RegisterRoutes(r)
 		controllers.NewEmployeeController().RegisterRoutes(r)

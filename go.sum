@@ -25,6 +25,8 @@ github.com/samuelbeaulieu1/gimlet v1.2.1 h1:kNUdvA0AmJqaFHdF6mm6iX6AaXccQD5/XQ/k
 github.com/samuelbeaulieu1/gimlet v1.2.1/go.mod h1:ZS622Lu3lBMu/ELOFmPnpkX0ErCf/GJm3V4ufDGEVhQ=
 github.com/samuelbeaulieu1/gimlet v1.2.2 h1:uxaRHqF3fSzQdvUTW/l7Cr36Vc22legXP1ySEvzbpc8=
 github.com/samuelbeaulieu1/gimlet v1.2.2/go.mod h1:ZS622Lu3lBMu/ELOFmPnpkX0ErCf/GJm3V4ufDGEVhQ=
+golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f h1:OeJjE6G4dgCY4PIXvIRQbE8+RX+uXZyGhUy/ksMGJoc=
+golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f/go.mod h1:IxCIyHEi3zRg3s0A5j5BB6A9Jmi73HwBIUl50j+osU4=
 gorm.io/driver/mysql v1.2.3 h1:cZqzlOfg5Kf1VIdLC1D9hT6Cy9BgxhExLj/2tIgUe7Y=
 gorm.io/driver/mysql v1.2.3/go.mod h1:qsiz+XcAyMrS6QY+X3M9R6b/lKM1imKmcuK9kac5LTo=
 gorm.io/gorm v1.22.4/go.mod h1:1aeVC+pe9ZmvKZban/gW4QPra7PRoTEssyc922qCAkk=

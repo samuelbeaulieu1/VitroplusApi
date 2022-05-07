@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"strconv"
 
 	"github.com/samuelbeaulieu1/gimlet/actions"
 	"github.com/samuelbeaulieu1/gimlet/responses"
@@ -22,7 +23,7 @@ func IsUniquePin(action actions.Action, value reflect.Value, field reflect.Struc
 
 func IsValidPin(action actions.Action, value reflect.Value, field reflect.StructField) (bool, error) {
 	val := value.String()
-	if len(val) != 0 && len(val) < models.PinLength {
+	if _, err := strconv.Atoi(val); len(val) != 0 && (len(val) != models.PinLength || err != nil) {
 		return false, responses.NewError(fmt.Sprintf("Le pin doit être composé de %d chiffres", models.PinLength))
 	}
 

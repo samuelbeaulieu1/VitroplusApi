@@ -23,22 +23,6 @@ func (clock *Clock) Delete(id string) error {
 	return clock.dao.Delete(id, &models.ClockModel{})
 }
 
-func (clock *Clock) Update(id string, request *models.ClockModel) error {
-	return nil
-}
-
-func (clock *Clock) Create(request *models.ClockModel) (*models.ClockModel, error) {
-	return nil, nil
-}
-
-func (clock *Clock) Get(id string) (*models.ClockModel, error) {
-	return nil, nil
-}
-
-func (clock *Clock) GetAll() (*[]models.ClockModel, error) {
-	return nil, nil
-}
-
 func (clock *Clock) Exists(id string) bool {
 	return clock.dao.ExistsByID(id, &models.ClockModel{})
 }

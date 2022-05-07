@@ -1,56 +1,34 @@
 package middlewares
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/samuelbeaulieu1/gimlet"
+	"github.com/samuelbeaulieu1/gimlet/responses"
+	"github.com/samuelbeaulieu1/vitroplus-api/src/services"
 )
 
 func AuthenticateAdmin(route *gimlet.Route, ctx *gimlet.Context) {
 	authorization := ctx.Request.Header.Get("Authorization")
 	splitToken := strings.Split(authorization, "Bearer ")
 	if len(splitToken) != 2 {
-		// authenticationError(route, ctx)
+		authenticationError(route, ctx)
 		return
 	}
-	/* token := splitToken[1]
-	if payload, ok := verifySession(token); ok {
-		ctx.Authentication = payload
-		return
+	token := splitToken[1]
+	if ok := verifySession(token); !ok {
+		authenticationError(route, ctx)
 	}
-	authenticationError(route, ctx) */
 }
 
-/* func verifySession(token string) (*engine.AuthTokenPayload, bool) {
-	authService := services.NewAuthService()
-	payload, err := authService.ValidateToken(token)
-	if err != nil {
-		return nil, false
-	}
-
-	valid := validateSession(payload)
-	if !valid {
-		return nil, false
-	}
-	return payload, true
+func verifySession(token string) bool {
+	authService := services.NewAdminService()
+	err := authService.ValidateToken(token)
+	return err == nil
 }
 
-func authenticationError(route *engine.Route, ctx *engine.Context) {
-	ctx.WriteJSONError(http.StatusUnauthorized, engine.NewError("Authentification invalide"))
+func authenticationError(route *gimlet.Route, ctx *gimlet.Context) {
+	ctx.WriteJSONError(http.StatusUnauthorized, responses.NewError("Authentification invalide"))
 	route.CancelExecution()
 }
-
-func validateSession(token *engine.AuthTokenPayload) bool {
-	session := entities.NewSession()
-	query := &models.SessionModel{}
-	id, err := utils.ParseModelId(token.Id)
-	if err != nil {
-		return false
-	}
-	query.Model = gorm.Model{
-		ID: id,
-	}
-	res, err := session.Get(query)
-
-	return err == nil && res.Valid
-} */
