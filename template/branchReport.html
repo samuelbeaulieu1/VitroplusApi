@@ -1,27 +1,22 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<table>
-    <tbody>
-      <tr>
-        <td>
-            <img alt="vitroplus" src="{{ .Logo }}" width="400">
-            <br><br>
-        </td>
-      </tr>
-      <tr>
-        <td width="74%" style="text-align: left;">
+<div class="header">
+    <div class="logo">
+        <img alt="vitroplus" src="{{ .Logo }}" width="400">
+    </div>
+    <div class="info">
+        <div class="branch">
             {{.Branch.Store}}<br>
             {{.Branch.Owner}}<br>
             {{.Branch.Address}}<br>
             {{.Branch.Phone}}
-        </td>
-        <td style="text-align: right;">
+        </div>
+        <div class="date">
             <span class='title'>Rapport de travail</span><br>
             <span class='text'>Date de début : <strong>{{.StartDate.Format "2006-01-02"}}</strong></span><br>
             <span class='text'>Date de fin : <strong>{{.EndDate.Format "2006-01-02"}}</strong></span>
-        </td>
-      </tr>
-    </tbody>
-</table>
+        </div>
+    </div>
+</div>
 <br />
 <br />
 <br />
@@ -42,8 +37,28 @@
 </table>
 
 <style>
+    .header {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 6rem;
+    }
+    
+    .info {
+        margin-top: 2rem;
+        width: 100%;
+    }
+
+    .branch {
+        float: left;
+    }
+
+    .date {
+        float: right;
+        text-align: right;
+    }
+
     .border, .border tr, .border th {
-        border: 1px solid black;
+        border: 2px solid black;
         border-collapse: collapse;
     }
 
