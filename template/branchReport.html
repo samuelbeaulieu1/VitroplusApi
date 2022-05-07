@@ -1,0 +1,53 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<table>
+    <tbody>
+      <tr>
+        <td>
+            <img alt="vitroplus" src="{{ .Logo }}" width="400">
+            <br><br>
+        </td>
+      </tr>
+      <tr>
+        <td width="74%" style="text-align: left;">
+            {{.Branch.Store}}<br>
+            {{.Branch.Owner}}<br>
+            {{.Branch.Address}}<br>
+            {{.Branch.Phone}}
+        </td>
+        <td style="text-align: right;">
+            <span class='title'>Rapport de travail</span><br>
+            <span class='text'>Date de début : <strong>{{.StartDate.Format "2006-01-02"}}</strong></span><br>
+            <span class='text'>Date de fin : <strong>{{.EndDate.Format "2006-01-02"}}</strong></span>
+        </td>
+      </tr>
+    </tbody>
+</table>
+<br />
+<br />
+<br />
+<div align="center"><h3><u>Temps travaillé par les employés durant la période</u></h3></div>
+<table width="95%" class="border" cellpadding="5" align="center">
+    <tr align="center">
+        <th width="40%"><b>Employé</b></th>
+        <th width="30%"><b>Temps travaillé</b></th>
+        <th width="30%"><b>Temps supplémentaire</b></th>
+    </tr>
+    {{range .EmployeesReport}}
+        <tr class="entry">
+            <th>{{.Employee.Firstname}} {{.Employee.Lastname}}</th>
+            <th>{{.TotalTime}}</th>
+            <th>{{.Overtime}}</th>
+        </tr>
+    {{end}}
+</table>
+
+<style>
+    .border, .border tr, .border th {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    .entry, .entry th {
+        font-weight: normal;
+    }
+</style>

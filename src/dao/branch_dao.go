@@ -22,3 +22,11 @@ func (dao *BranchDao) GetAll() (*[]models.BranchModel, error) {
 
 	return &branches, res.Error
 }
+
+func (dao *BranchDao) GetEmployees(branchID string) ([]*models.EmployeeModel, error) {
+	var employees []*models.EmployeeModel
+
+	res := dao.Db.Model(&models.EmployeeModel{}).Where("branch_id = ?", branchID).Find(&employees)
+
+	return employees, res.Error
+}

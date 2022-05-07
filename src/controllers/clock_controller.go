@@ -63,12 +63,16 @@ func (controller *ClockController) getBranchClocksInTimeframe(ctx *gimlet.Contex
 		return
 	}
 
-	if clocks, err := services.NewClockService().GetBranchClocksInTimeframe(branchId, *startDate, *endDate); err != nil {
+	if report, err := services.NewClockService().GetBranchClocksInTimeframe(branchId, *startDate, *endDate); err != nil {
 		ctx.WriteJSONError(http.StatusBadRequest, err)
 	} else {
-		var clocksDto dto.ClocksReportDTO
-		gimlet.ParseModelToDTO(&clocks, &clocksDto)
-		ctx.WriteJSONResponse(clocksDto)
+		if pdf, err := services.CreateReport(report); err != nil {
+			ctx.WriteJSONError(http.StatusBadRequest, err)
+		} else {
+			ctx.Writer.Header().Set("Content-Disposition", "attachment; filename=rapport.pdf")
+			ctx.Writer.Header().Set("Content-Type", "application/pdf")
+			ctx.Writer.Write(pdf)
+		}
 	}
 }
 

@@ -79,7 +79,7 @@ func (service *ClockService) calculateClocksTime(clocks *[]models.ClockModel) in
 	return totalMinutes
 }
 
-func (service *ClockService) GetBranchClocksInTimeframe(branchID string, startDate time.Time, endDate time.Time) (*classes.ClocksReport, responses.Error) {
+func (service *ClockService) GetBranchClocksInTimeframe(branchID string, startDate time.Time, endDate time.Time) (*classes.BranchReport, responses.Error) {
 	if err := NewBranchService().Exists(branchID); err != nil {
 		return nil, err
 	}
@@ -89,7 +89,54 @@ func (service *ClockService) GetBranchClocksInTimeframe(branchID string, startDa
 	}
 	clocksReport := service.groupClocksByDate(clocks)
 
-	return clocksReport, nil
+	return service.createBranchReport(clocksReport, branchID, startDate, endDate)
+}
+
+func (service *ClockService) initBranchReport(ID string, start time.Time, end time.Time) (*classes.BranchReport, responses.Error) {
+	branch, err := NewBranchService().Get(ID)
+	if err != nil {
+		return nil, err
+	}
+	report := &classes.BranchReport{
+		Branch:          branch,
+		StartDate:       start,
+		EndDate:         end,
+		EmployeesReport: map[string]*classes.BranchEmployeeReport{},
+	}
+	employees, err := NewBranchService().GetBranchEmployees(ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, employee := range employees {
+		report.EmployeesReport[employee.ID] = &classes.BranchEmployeeReport{
+			Employee:  employee,
+			TotalTime: 0,
+			Overtime:  0,
+		}
+	}
+
+	return report, nil
+}
+
+func (service *ClockService) createBranchReport(clocks *classes.ClocksReport, ID string, start time.Time, end time.Time) (*classes.BranchReport, responses.Error) {
+	report, err := service.initBranchReport(ID, start, end)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, dayClocks := range *clocks {
+		for employeeID, employeeClocks := range dayClocks.Report {
+			entry := report.EmployeesReport[employeeID]
+			if entry.TotalTime+employeeClocks.TotalTimeFloat > overtimeHrsThreshold {
+				entry.Overtime += employeeClocks.TotalTimeFloat + entry.TotalTime - overtimeHrsThreshold
+				entry.TotalTime = overtimeHrsThreshold
+			} else {
+				entry.TotalTime += employeeClocks.TotalTimeFloat
+			}
+		}
+	}
+
+	return report, nil
 }
 
 func (service *ClockService) GetEmployeeClocksInTimeframe(employeeID string, startDate time.Time, endDate time.Time) (*classes.ClocksReport, responses.Error) {

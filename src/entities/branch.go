@@ -47,6 +47,10 @@ func (branch *Branch) GetAll() (*[]models.BranchModel, error) {
 	return branch.dao.GetAll()
 }
 
+func (branch *Branch) GetEmployees(branchID string) ([]*models.EmployeeModel, error) {
+	return branch.dao.GetEmployees(branchID)
+}
+
 func (branch *Branch) Exists(id string) bool {
 	return branch.dao.ExistsByID(id, &models.BranchModel{})
 }
