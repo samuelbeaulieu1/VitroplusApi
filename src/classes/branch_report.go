@@ -11,7 +11,6 @@ type BranchReport struct {
 	EndDate         time.Time                        `json:"end_date"`
 	Branch          *models.BranchModel              `json:"branch"`
 	EmployeesReport map[string]*BranchEmployeeReport `json:"employees_report"`
-	Logo            string
 }
 
 type BranchEmployeeReport struct {

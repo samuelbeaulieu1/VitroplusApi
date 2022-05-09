@@ -12,7 +12,7 @@ import (
 	"github.com/samuelbeaulieu1/vitroplus-api/src/classes"
 )
 
-func renderTemplate(branchReport *classes.BranchReport) (string, responses.Error) {
+func renderTemplate(branchReport *classes.BranchReportRequest) (string, responses.Error) {
 	data, err := os.ReadFile("template/branchReport.html")
 	logoSrc, _ := filepath.Abs("template/images/vitroplusZiebart.png")
 	tpl := ""
@@ -32,7 +32,7 @@ func renderTemplate(branchReport *classes.BranchReport) (string, responses.Error
 	return tpl, nil
 }
 
-func CreateReport(branchReport *classes.BranchReport) ([]byte, responses.Error) {
+func CreateReport(branchReport *classes.BranchReportRequest) ([]byte, responses.Error) {
 	tpl, err := renderTemplate(branchReport)
 	if err != nil {
 		return nil, err

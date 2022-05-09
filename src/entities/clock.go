@@ -31,7 +31,8 @@ func (clock *Clock) UpdateEmployeeClocks(req *classes.UpdateEmployeeClocksReques
 	newClocks := []models.ClockModel{}
 	year, month, day := req.Date.Date()
 	for _, c := range *clocks {
-		date := time.Date(year, month, day, c.Date.Hour(), c.Date.Minute(), 0, 0, time.UTC)
+		clockDate := c.Date.In(time.Local)
+		date := time.Date(year, month, day, clockDate.Hour(), clockDate.Minute(), 0, 0, time.Local)
 		newClocks = append(newClocks, models.ClockModel{
 			ID:         gimlet.CreateNewID(clock.dao, &models.ClockModel{}, gimlet.DefaultIDLength),
 			Date:       date,
@@ -43,23 +44,23 @@ func (clock *Clock) UpdateEmployeeClocks(req *classes.UpdateEmployeeClocksReques
 }
 
 func (clock *Clock) GetEmployeeClocksBetween(employeeID string, startDate time.Time, endDate time.Time) (*[]models.ClockModel, error) {
-	startDate = time.Date(startDate.Year(), startDate.Month(), startDate.Day(), 0, 0, 0, 0, time.UTC)
-	endDate = time.Date(endDate.Year(), endDate.Month(), endDate.Day()+1, 0, 0, 0, -1, time.UTC)
+	startDate = time.Date(startDate.Year(), startDate.Month(), startDate.Day(), 0, 0, 0, 0, time.Local)
+	endDate = time.Date(endDate.Year(), endDate.Month(), endDate.Day()+1, 0, 0, 0, -1, time.Local)
 
 	return clock.dao.GetEmployeeClocks(employeeID, startDate, endDate)
 }
 
 func (clock *Clock) GetBranchClocksBetween(branchID string, startDate time.Time, endDate time.Time) (*[]models.ClockModel, error) {
-	startDate = time.Date(startDate.Year(), startDate.Month(), startDate.Day(), 0, 0, 0, 0, time.UTC)
-	endDate = time.Date(endDate.Year(), endDate.Month(), endDate.Day()+1, 0, 0, 0, -1, time.UTC)
+	startDate = time.Date(startDate.Year(), startDate.Month(), startDate.Day(), 0, 0, 0, 0, time.Local)
+	endDate = time.Date(endDate.Year(), endDate.Month(), endDate.Day()+1, 0, 0, 0, -1, time.Local)
 
 	return clock.dao.GetBranchClocks(branchID, startDate, endDate)
 }
 
 func (clock *Clock) GetEmployeeClocks(employeeID string, date time.Time) (*[]models.ClockModel, error) {
 	year, month, day := date.Date()
-	startDate := time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
-	endDate := time.Date(year, month, day+1, 0, 0, 0, -1, time.UTC)
+	startDate := time.Date(year, month, day, 0, 0, 0, 0, time.Local)
+	endDate := time.Date(year, month, day+1, 0, 0, 0, -1, time.Local)
 
 	return clock.dao.GetEmployeeClocks(employeeID, startDate, endDate)
 }

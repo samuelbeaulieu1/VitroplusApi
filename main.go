@@ -19,7 +19,7 @@ func main() {
 	registerControllers(instance)
 	dao.InitConnection()
 	lang.Set(lang.FR)
-	os.Setenv("TZ", "UTC")
+	os.Setenv("TZ", "Canada/Eastern")
 	instance.Run()
 }
 

@@ -25,6 +25,7 @@ func (controller *ClockController) RegisterRoutes(router gimlet.Router) {
 		r.GET("Between/{startDate}/{endDate}/For/{employeeId}", controller.getEmployeeClocksInTimeframe).Use(middlewares.AuthenticateAdmin)
 		r.PUT("Date/{date}/For/{employeeId}", controller.updateEmployeeClocks).Use(middlewares.AuthenticateAdmin)
 		r.POST("", controller.clockInOut)
+		r.POST("Between/{startDate}/{endDate}/In/{branchId}/ToPDF", controller.getBranchReportPDF).Use(middlewares.AuthenticateAdmin)
 	})
 }
 
@@ -66,13 +67,37 @@ func (controller *ClockController) getBranchClocksInTimeframe(ctx *gimlet.Contex
 	if report, err := services.NewClockService().GetBranchClocksInTimeframe(branchId, *startDate, *endDate); err != nil {
 		ctx.WriteJSONError(http.StatusBadRequest, err)
 	} else {
-		if pdf, err := services.CreateReport(report); err != nil {
-			ctx.WriteJSONError(http.StatusBadRequest, err)
-		} else {
-			ctx.Writer.Header().Set("Content-Disposition", "attachment; filename=rapport.pdf")
-			ctx.Writer.Header().Set("Content-Type", "application/pdf")
-			ctx.Writer.Write(pdf)
-		}
+		var reportDto dto.BranchReportDTO
+		gimlet.ParseModelToDTO(&report, &reportDto)
+		ctx.WriteJSONResponse(reportDto)
+	}
+}
+
+func (controller *ClockController) getBranchReportPDF(ctx *gimlet.Context) {
+	branchId := ctx.GetParam("branchId")
+	startDate, startOk := getDateParam("startDate", ctx)
+	endDate, endOk := getDateParam("endDate", ctx)
+	if !startOk || !endOk {
+		return
+	}
+	var report classes.BranchReportRequest
+	ctx.ParseBody(&report)
+	report.StartDate = *startDate
+	report.EndDate = *endDate
+
+	branch, err := services.NewBranchService().Get(branchId)
+	if err != nil {
+		ctx.WriteJSONError(http.StatusBadRequest, err)
+		return
+	}
+
+	report.Branch = branch
+	if pdf, err := services.CreateReport(&report); err != nil {
+		ctx.WriteJSONError(http.StatusBadRequest, err)
+	} else {
+		ctx.Writer.Header().Set("Content-Disposition", "attachment; filename=rapport.pdf")
+		ctx.Writer.Header().Set("Content-Type", "application/pdf")
+		ctx.Writer.Write(pdf)
 	}
 }
 

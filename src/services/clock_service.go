@@ -113,6 +113,9 @@ func (service *ClockService) initBranchReport(ID string, start time.Time, end ti
 			TotalTime: 0,
 			Overtime:  0,
 		}
+		if *employee.IsConstantHours {
+			report.EmployeesReport[employee.ID].TotalTime = *employee.ConstantHours
+		}
 	}
 
 	return report, nil
@@ -156,7 +159,7 @@ func (service *ClockService) groupClocksByDate(clocks *[]models.ClockModel) *cla
 	clocksReport := make(classes.ClocksReport)
 	for _, clock := range *clocks {
 		year, month, day := clock.Date.Date()
-		date := time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
+		date := time.Date(year, month, day, 0, 0, 0, 0, time.Local)
 		unixTimestamp := date.Unix()
 		if _, ok := clocksReport[unixTimestamp]; !ok {
 			clocksReport[unixTimestamp] = &classes.ClocksDayReport{
@@ -220,9 +223,9 @@ func (service *ClockService) ClockInOut(req *classes.ClockInRequest) (*dto.Clock
 	if err != nil {
 		return nil, err
 	}
-	date := time.Now().In(time.UTC)
+	date := time.Now()
 	if date.Hour() < startOfDay {
-		date = time.Date(date.Year(), date.Month(), date.Day(), startOfDay, 0, 0, 0, time.UTC)
+		date = time.Date(date.Year(), date.Month(), date.Day(), startOfDay, 0, 0, 0, time.Local)
 	}
 	if err := service.verifyEmployeeClockIn(employee, date); err != nil {
 		return nil, err
