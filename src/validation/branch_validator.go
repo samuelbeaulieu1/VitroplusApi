@@ -13,7 +13,7 @@ func IsValidPhone(action actions.Action, value reflect.Value, field reflect.Stru
 	ok, err := regexp.Match("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$", []byte(val))
 
 	if !ok || err != nil {
-		return false, responses.NewError("Le format du numéro de téléphone est invalide")
+		return false, responses.NewError("Le numéro de téléphone doit être du format (xxx)-xxx-xxxx ou xxx-xxx-xxxx")
 	}
 
 	return true, nil
