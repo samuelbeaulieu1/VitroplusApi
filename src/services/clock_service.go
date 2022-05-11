@@ -16,7 +16,7 @@ const (
 	workTimeQuarter      = 15
 	workTimeThreshold    = 7.5
 	overtimeHrsThreshold = 40
-	startOfDay           = 12
+	startOfDay           = 8
 )
 
 type ClockService struct{}
