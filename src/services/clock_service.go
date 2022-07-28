@@ -10,6 +10,7 @@ import (
 	"github.com/samuelbeaulieu1/vitroplus-api/src/dto"
 	"github.com/samuelbeaulieu1/vitroplus-api/src/entities"
 	"github.com/samuelbeaulieu1/vitroplus-api/src/models"
+	"github.com/samuelbeaulieu1/vitroplus-api/src/timezone"
 )
 
 const (
@@ -159,7 +160,7 @@ func (service *ClockService) groupClocksByDate(clocks *[]models.ClockModel) *cla
 	clocksReport := make(classes.ClocksReport)
 	for _, clock := range *clocks {
 		year, month, day := clock.Date.Date()
-		date := time.Date(year, month, day, 0, 0, 0, 0, time.Local)
+		date := time.Date(year, month, day, 0, 0, 0, 0, timezone.Local)
 		unixTimestamp := date.Unix()
 		if _, ok := clocksReport[unixTimestamp]; !ok {
 			clocksReport[unixTimestamp] = &classes.ClocksDayReport{
@@ -223,9 +224,9 @@ func (service *ClockService) ClockInOut(req *classes.ClockInRequest) (*dto.Clock
 	if err != nil {
 		return nil, err
 	}
-	date := time.Now()
+	date := time.Now().In(timezone.Local)
 	if date.Hour() < startOfDay {
-		date = time.Date(date.Year(), date.Month(), date.Day(), startOfDay, 0, 0, 0, time.Local)
+		date = time.Date(date.Year(), date.Month(), date.Day(), startOfDay, 0, 0, 0, timezone.Local)
 	}
 	if err := service.verifyEmployeeClockIn(employee, date); err != nil {
 		return nil, err

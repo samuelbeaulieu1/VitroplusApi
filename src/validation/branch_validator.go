@@ -1,15 +1,14 @@
 package validation
 
 import (
-	"reflect"
 	"regexp"
 
-	"github.com/samuelbeaulieu1/gimlet/actions"
 	"github.com/samuelbeaulieu1/gimlet/responses"
+	"github.com/samuelbeaulieu1/gimlet/validators"
 )
 
-func IsValidPhone(action actions.Action, value reflect.Value, field reflect.StructField) (bool, error) {
-	val := value.String()
+func IsValidPhone(ctx *validators.ValidationCtx) (bool, error) {
+	val := ctx.Value.String()
 	ok, err := regexp.Match("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$", []byte(val))
 
 	if !ok || err != nil {
